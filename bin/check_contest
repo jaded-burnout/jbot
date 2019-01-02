@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+
+require "rubygems"
+require "bundler/setup"
+
+require "oga"
+require "net/http"
+require "uri"
+require "date"
+
+$url = "https://forums.somethingawful.com/showthread.php?threadid=3878560"
+
+document = Oga.parse_html(Net::HTTP.get(URI($url)))
+
+def make_link(href)
+  if href.start_with?("#")
+    $url + href
+  else
+    href
+  end
+end
+
+posts = document.css(".post").each_with_object([]).with_index do |(post, array), index|
+  author = post.at_css(".author").text
+  next if author == "Adbot"
+  next if index <= 4
+  next if author == "Jaded Burnout"
+
+  array << {
+    author: author,
+    link: make_link(post.css(".postdate a").first.get("href")),
+    timestamp: DateTime.parse(post.at_css(".postdate").text),
+  }
+end
+
+$state = "unarmed"
+$events = []
+
+posts.each_with_index do |post, index|
+  end_stamp = post[:timestamp] + 1 # 1 day later
+  next if index > 0 && end_stamp >= DateTime.now
+  number_of_posts = posts.select { |p| p[:timestamp] <= end_stamp }.count - index
+  p number_of_posts
+end
