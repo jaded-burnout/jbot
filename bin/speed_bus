@@ -4,6 +4,8 @@ require "rubygems"
 require "bundler/setup"
 Bundler.require(:default)
 
+require_relative "../lib/application"
 require_relative "../lib/contests/posts_within_24_hour_windows"
 
+$application = Application.new
 Contests::PostsWithin24HourWindows.print_all

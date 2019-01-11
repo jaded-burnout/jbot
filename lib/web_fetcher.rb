@@ -12,6 +12,11 @@ class WebFetcher
     else
       raise ArgumentError.new("A path or thread ID must be provided")
     end
+
+    if File.exist?(cookies_file)
+      @cookies = HTTP::CookieJar.new
+      @cookies.load(cookies_file.to_s)
+    end
   end
 
   def fetch_page(page_number: 1)
@@ -30,7 +35,7 @@ private
     body = HTTP.cookies(cookies).get(url).to_s
 
     if body.include?(LOGGED_OUT_TRIGGER_TEXT)
-      @cookies = nil
+      expire_cookies
       log_in
     end
 
@@ -56,6 +61,7 @@ private
         raise "Error authenticating, redirected to #{location}"
       else
         @cookies = response.cookies
+        @cookies.save(cookies_file)
       end
     else
       raise "Unhandled response code: #{response.code}"
@@ -86,5 +92,14 @@ private
 
   def username_or_password_missing?
     username.nil? || username.empty? || password.nil? || password.empty?
+  end
+
+  def cookies_file
+    $application.root + ".cookies"
+  end
+
+  def expire_cookies
+    @cookies = nil
+    cookies_file.truncate(0)
   end
 end
