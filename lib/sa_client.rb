@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "web_fetcher"
+require_relative "web_client"
 require_relative "post_parser"
 
 class SAClient
@@ -10,7 +10,7 @@ class SAClient
   ].freeze
 
   def initialize(thread_id:)
-    @web_fetcher = WebFetcher.new(thread_id: thread_id)
+    @web_client = WebClient.new(thread_id: thread_id)
   end
 
   def posts
@@ -19,7 +19,7 @@ class SAClient
 
 private
 
-  attr_reader :web_fetcher
+  attr_reader :web_client
 
   def filtered_posts
     unfiltered_posts.reject do |post|
@@ -28,12 +28,12 @@ private
   end
 
   def unfiltered_posts
-    page = web_fetcher.fetch_page
+    page = web_client.fetch_page
     post_array, page_count = PostParser.posts_for_page(page, count: true)
 
     if page_count > 1
       (2..page_count).each do |page_number|
-        page = web_fetcher.fetch_page(page_number: page_number)
+        page = web_client.fetch_page(page_number: page_number)
         post_array += PostParser.posts_for_page(page)
       end
     end
