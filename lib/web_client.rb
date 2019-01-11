@@ -4,14 +4,8 @@ class WebClient
   LOGGED_OUT_TRIGGER_TEXT = "CLICK HERE TO REGISTER YOUR ACCOUNT"
   BASE_URL = "https://forums.somethingawful.com"
 
-  def initialize(path: nil, thread_id: nil)
-    if path
-      @path = path
-    elsif thread_id
-      @path = "/showthread.php?threadid=#{thread_id}"
-    else
-      raise ArgumentError.new("A path or thread ID must be provided")
-    end
+  def initialize(thread_id:)
+    @thread_id = thread_id
 
     if File.exist?(cookies_file)
       @cookies = HTTP::CookieJar.new
@@ -20,19 +14,42 @@ class WebClient
   end
 
   def fetch_page(page_number: 1)
-    get_authenticated(url_for(page_number: page_number))
+    url = thread_url(page_number: page_number)
+
+    authenticated_request do |http|
+      http.get(url)
+    end
+  end
+
+  def reply(text)
+    reply_form = authenticated_request do |http|
+      http.get(BASE_URL + "/newreply.php?action=newreply&threadid=#{thread_id}")
+    end
+
+    form_key = extract_value(reply_form, name: "formkey")
+    form_cookie = extract_value(reply_form, name: "form_cookie")
+
+    authenticated_request do |http|
+      http.post(BASE_URL + "/newreply.php", form: {
+        action: "postreply",
+        threadid: thread_id,
+        formkey: form_key,
+        form_cookie: form_cookie,
+        message: text,
+        submit: "Submit Reply",
+      })
+    end
   end
 
 private
 
-  attr_reader :path, :cookies
+  attr_reader :thread_id, :cookies
 
-  def get_authenticated(url)
+  def authenticated_request
     log_in unless logged_in?
 
-    puts "Fetching #{url}"
-
-    body = HTTP.cookies(cookies).get(url).to_s
+    http = yield(HTTP.cookies(cookies))
+    body = http.to_s
 
     if body.include?(LOGGED_OUT_TRIGGER_TEXT)
       expire_cookies
@@ -68,8 +85,8 @@ private
     end
   end
 
-  def url_for(page_number:)
-    url = BASE_URL + path
+  def thread_url(page_number:)
+    url = BASE_URL + "/showthread.php?threadid=#{thread_id}"
 
     if page_number > 1
       url + "&perpage=40&pagenumber=#{page_number}"
@@ -101,5 +118,11 @@ private
   def expire_cookies
     @cookies = nil
     cookies_file.truncate(0)
+  end
+
+  def extract_value(html, name:)
+    if html =~ /name="#{name}" value="([^"]+)"/
+      return $1
+    end
   end
 end

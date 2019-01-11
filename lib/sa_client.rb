@@ -17,6 +17,10 @@ class SAClient
     filtered_posts
   end
 
+  def reply(text)
+    web_client.reply(text)
+  end
+
 private
 
   attr_reader :web_client
