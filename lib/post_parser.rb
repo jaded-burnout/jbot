@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
+require "models/post"
+
 class PostParser
   class << self
-    def posts_for_page(page_html, count: false)
+    def posts_for_page(page_html, page_count: false)
       page = parse(page_html)
 
-      posts = page.css(".post").each_with_object([]).with_index do |(post, array), index|
-        author = post.at_css(".author").text
-
-        array << {
-          author: author,
+      posts = page.css(".post").map do |post|
+        Post.new(
+          author: post.at_css(".author").text,
           id: post.get("id").sub(/^post/, ""),
           text: post.at_css(".postbody").text,
           timestamp: Time.parse(post.at_css(".postdate").text),
-        }
+        )
       end
 
-      if count
+      if page_count
         [posts, get_page_count(page)]
       else
         posts

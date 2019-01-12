@@ -12,14 +12,14 @@ module Contests
     end
 
     def print_all
-      start_time = posts.first[:timestamp]
+      start_time = posts.first.timestamp
       end_time = Time.now
 
       while start_time < end_time
         end_stamp = start_time + (60 * 60 * 24)
 
-        if start_time == posts.first[:timestamp] || end_stamp < end_time
-          count = posts.select { |p| start_time <= p[:timestamp] && p[:timestamp] <= end_stamp }.count
+        if start_time == posts.first.timestamp || end_stamp < end_time
+          count = posts.select { |p| start_time <= p.timestamp && p.timestamp <= end_stamp }.count
           puts "#{start_time.strftime("%F %R")} -> #{end_stamp.strftime("%F %R")}: #{count}"
         end
 
@@ -30,7 +30,7 @@ module Contests
   private
 
     def posts
-      @posts ||= SAClient.new(thread_id: THREAD_ID).posts
+      @posts ||= SAClient.new(thread_id: THREAD_ID).user_posts
     end
   end
 end

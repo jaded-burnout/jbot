@@ -1,0 +1,28 @@
+# frozen_string_literal: true
+
+require "record"
+
+class Post < Record
+  ADBOT = "Adbot"
+  BOT_USER = "JBot"
+  JB_USER = "Jaded Burnout"
+
+  attributes %I[
+    author
+    id
+    text
+    timestamp
+  ]
+
+  def bot?
+    author == BOT_USER
+  end
+
+  def user?
+    ![
+      ADBOT,
+      BOT_USER,
+      JB_USER,
+    ].include?(author)
+  end
+end

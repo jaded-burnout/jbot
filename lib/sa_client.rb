@@ -4,17 +4,16 @@ require "web_client"
 require "post_parser"
 
 class SAClient
-  DEFAULT_EXCLUDED_USERS = [
-    "Adbot",
-    "Jaded Burnout",
-  ].freeze
-
   def initialize(thread_id:)
-    @web_client = WebClient.new(thread_id: thread_id)
+    @thread_id = thread_id
   end
 
-  def posts
-    filtered_posts
+  def user_posts
+    posts.select(&:user?)
+  end
+
+  def bot_posts
+    posts.select(&:bot?)
   end
 
   def reply(text)
@@ -23,25 +22,23 @@ class SAClient
 
 private
 
-  attr_reader :web_client
+  attr_reader :thread_id
 
-  def filtered_posts
-    unfiltered_posts.reject do |post|
-      DEFAULT_EXCLUDED_USERS.include?(post[:name])
-    end
+  def web_client
+    @web_client ||= WebClient.new(thread_id: thread_id)
   end
 
-  def unfiltered_posts
+  def posts
     page = web_client.fetch_page
-    post_array, page_count = PostParser.posts_for_page(page, count: true)
+    posts, page_count = PostParser.posts_for_page(page, page_count: true)
+    page_number = 2
 
-    if page_count > 1
-      (2..page_count).each do |page_number|
-        page = web_client.fetch_page(page_number: page_number)
-        post_array += PostParser.posts_for_page(page)
-      end
+    until page_number > page_count
+      page = web_client.fetch_page(page_number: page_number)
+      posts += PostParser.posts_for_page(page)
+      page_number += 1
     end
 
-    return post_array
+    return posts
   end
 end
