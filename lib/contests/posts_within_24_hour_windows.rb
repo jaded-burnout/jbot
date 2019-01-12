@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "time"
-require_relative "../sa_client"
+require "sa_client"
 
 module Contests
   class PostsWithin24HourWindows
@@ -28,8 +28,6 @@ module Contests
     end
 
   private
-
-    attr_reader :url
 
     def posts
       @posts ||= SAClient.new(thread_id: THREAD_ID).posts

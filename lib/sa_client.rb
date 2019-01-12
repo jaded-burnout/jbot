@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "web_client"
-require_relative "post_parser"
+require "web_client"
+require "post_parser"
 
 class SAClient
   DEFAULT_EXCLUDED_USERS = [
