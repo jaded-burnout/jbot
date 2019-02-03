@@ -29,16 +29,18 @@ private
   end
 
   def posts
-    page = web_client.fetch_page
-    posts, page_count = PostParser.posts_for_page(page, page_count: true)
-    page_number = 2
+    @posts ||= begin
+      page = web_client.fetch_page
+      posts, page_count = PostParser.posts_for_page(page, page_count: true)
+      page_number = 2
 
-    until page_number > page_count
-      page = web_client.fetch_page(page_number: page_number)
-      posts += PostParser.posts_for_page(page)
-      page_number += 1
+      until page_number > page_count
+        page = web_client.fetch_page(page_number: page_number)
+        posts += PostParser.posts_for_page(page)
+        page_number += 1
+      end
+
+      posts
     end
-
-    return posts
   end
 end

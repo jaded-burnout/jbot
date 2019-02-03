@@ -9,5 +9,8 @@ gem "http"
 gem "oga"
 
 group :test do
+  gem "climate_control"
+  gem "factory_bot"
   gem "rspec"
+  gem "timecop"
 end

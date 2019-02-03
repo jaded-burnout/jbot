@@ -1,0 +1,15 @@
+sixers
+	describe
+	manufacturer
+	heaven
+
+titles
+	picture
+	mourning
+	practical
+
+seven-day
+	horizon
+
+voucher
+	aluminium/aluminum

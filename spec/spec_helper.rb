@@ -13,9 +13,10 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
-require "application"
-$application = Application.new
+ENV["ENVIRONMENT"] = "test"
+require_relative "../setup"
+
+Dir[$application.root + "spec/support/*.rb"].each {|file| require file }
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -100,4 +101,6 @@ RSpec.configure do |config|
   # test failures related to randomization by passing the same `--seed` value
   # as the one that triggered the failure.
   Kernel.srand config.seed
+
+  config.fail_if_no_examples = true
 end
