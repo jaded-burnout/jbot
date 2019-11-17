@@ -24,7 +24,7 @@ module Contests
     end
 
     def post_update
-      client.reply(render("update_post"))
+      client.reply(render("minefield_update_post"))
     end
 
   private
