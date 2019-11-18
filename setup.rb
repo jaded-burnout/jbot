@@ -7,7 +7,7 @@ end
 
 require "rubygems"
 require "bundler/setup"
-Bundler.require(:default, ENV["ENVIRONMENT"]&.to_sym)
+Bundler.require(:default, ENV["ENVIRONMENT"]&.to_sym || "production")
 
 require "application"
 $application = Application.new

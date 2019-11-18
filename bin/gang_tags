@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require_relative "../setup"
+require "contests/gang_tags"
+
+Contests::GangTags.run_ballot(post_to_thread: ENV["POST_UPDATES"] == "true")

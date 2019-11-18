@@ -12,6 +12,14 @@ class SAClient
     posts.select(&:user?)
   end
 
+  def user_and_jb_posts(after:)
+    posts.select do |post|
+      next false unless post.timestamp > after
+
+      post.user? || post.jb?
+    end
+  end
+
   def bot_posts
     posts.select(&:bot?)
   end

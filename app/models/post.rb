@@ -25,4 +25,8 @@ class Post < Record
       JB_USER,
     ].include?(author)
   end
+
+  def jb?
+    author == JB_USER
+  end
 end
