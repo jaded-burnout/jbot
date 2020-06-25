@@ -30,9 +30,9 @@ possible_discord_ids = discord_auth_thread.user_posts.each_with_object({}) do |p
   end
 end
 
-unverified_users = quarantine_channel
-  .users
-  .reject { |u| u.role?(verified_role_id) }
+unverified_users = diy_server
+  .members
+  .reject { |u| u.bot_account? || u.role?(verified_role_id) }
   .each_with_object({}) do |user, hash|
     hash[user.id] = user
   end
