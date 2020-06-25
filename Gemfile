@@ -7,6 +7,7 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 gem "byebug"
 gem "http"
 gem "oga"
+gem "discordrb"
 
 group :test do
   gem "climate_control"
