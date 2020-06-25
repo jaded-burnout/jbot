@@ -3,11 +3,7 @@
 require_relative "../setup"
 require "sa_client"
 
-# SAClient.new(thread_id: "3765007").reply("Bep bop bep!")
-
 jbot = Discordrb::Bot.new(token: ENV["DISCORD_TOKEN"])
-
-raise "This bot is already connected" if jbot.connected?
 
 at_exit { jbot.stop }
 

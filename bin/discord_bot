@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require_relative "../setup"
+
+jbot = Discordrb::Bot.new(token: ENV["DISCORD_TOKEN"])
+
+at_exit { jbot.stop }
+
+jbot.direct_message do |event|
+  event.respond(event.author.id)
+end
+
+jbot.run
