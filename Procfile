@@ -1,1 +1,1 @@
-discord_bot: bin/discord_bot
+discord_bot: jbot/bin/discord_bot
