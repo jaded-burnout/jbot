@@ -17,6 +17,10 @@ require "sprockets/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+Gem.path.each do |path|
+  Warning.ignore(//, path)
+end
+
 module Web
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.

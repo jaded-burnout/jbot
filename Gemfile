@@ -17,6 +17,7 @@ gem "sass-rails", "~> 5.0" # Use SCSS for stylesheets
 gem "uglifier", ">= 1.3.0" # Use Uglifier as compressor for JavaScript assets
 gem "bootsnap", ">= 1.1.0", require: false
 gem "bcrypt", "~> 3.1.7" # Use ActiveModel has_secure_password
+gem "warning"
 
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
@@ -27,6 +28,7 @@ group :development do
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
+  gem "annotate"
 end
 
 group :test do
