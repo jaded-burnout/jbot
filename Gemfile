@@ -8,6 +8,7 @@ gem "byebug"
 gem "http"
 gem "oga"
 gem "discordrb"
+gem "rails"
 
 group :test do
   gem "climate_control"
