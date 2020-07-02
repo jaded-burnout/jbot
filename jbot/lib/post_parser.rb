@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "models/post"
+require_relative "../app/models/post"
 
 class PostParser
   class << self

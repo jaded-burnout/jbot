@@ -1,0 +1,11 @@
+<h1>Identify yourself on SomethingAwful</h1>
+
+<%= form_for current_user, url: authentication_something_awful_verify_path do |f| %>
+  <h2>Who are you?</h2>
+
+  <%= f.select :something_awful_id, options_from_collection_for_select(@available_mods, :something_awful_id, :name, current_user.something_awful_id),
+    label: "Moderators",
+    include_blank: true %>
+
+  <button>Save</button>
+<% end %>

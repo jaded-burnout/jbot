@@ -1,0 +1,5 @@
+<p>
+  <%= link_to stage.finished? ?
+    "Identified as #{current_user.something_awful_claimed_identity.name}" : "Identify yourself",
+    authentication_something_awful_identify_path %>
+</p>

@@ -1,0 +1,24 @@
+<% list_type = stage.ordered? ? 'ol' : 'ul' %>
+<<%= list_type %> class="
+  stage
+  <%= 'root' if stage.root? %>
+">
+  <% stage.sequence.each do |substage| %>
+    <li class="
+      <%= 'finished' if substage.finished? %>
+      <%= 'next' if (next_stage = stage.ordered? && stage.sequence.find { |s| !s.finished? } == substage) %>
+      <%= 'locked' if stage.ordered? && !next_stage && !substage.finished? %>
+      <%= 'terminal' if substage.terminal? %>
+    ">
+      <% if substage.terminal? %>
+        <%= render substage.template, stage: substage %>
+      <% else %>
+        <% unless substage.root? %>
+          <h2><%= substage.name %></h2>
+        <% end %>
+
+        <%= render "stage", stage: substage %>
+      <% end %>
+    </li>
+  <% end %>
+</<%= list_type %>>

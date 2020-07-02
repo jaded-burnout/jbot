@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "record"
+require_relative "../../lib/record"
 
 class Post < Record
   ADBOT = "Adbot"

@@ -1,9 +1,16 @@
 # frozen_string_literal: true
 
-require "web_client"
-require "post_parser"
+require_relative "./web_client"
+require_relative "./post_parser"
 
 class SAClient
+  MODS_AND_FORUMS_JSON_URL = "https://forums.somethingawful.com/index.php?json=1".freeze
+
+  def self.fetch_mods_and_forums(cookies_file_path)
+    WebClient.new(cookies_file_path: cookies_file_path)
+      .fetch_json_url(url: MODS_AND_FORUMS_JSON_URL).fetch("forums")
+  end
+
   def initialize(thread_id:)
     @thread_id = thread_id
   end

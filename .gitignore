@@ -1,6 +1,7 @@
-/*.html
-/.cookies
-/spec/examples.txt
+# JBot
+/jbot/*.html
+.cookies
+/jbot/spec/examples.txt
 
 # Ignore all logfiles and tempfiles.
 /log/*

@@ -1,0 +1,59 @@
+ul.stage {
+  list-style: none;
+}
+
+ol.stage,
+ul.stage {
+  font-size: 120%;
+  padding: 0;
+  padding-inline-start: 0;
+
+  &.root {
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 0;
+
+    > li:last-child > ul {
+      padding-bottom: 0;
+    }
+  }
+
+  li {
+    margin: 0;
+
+    h2 {
+      margin: 10px 12px;
+    }
+
+    p {
+      margin-top: 0;
+      padding: 3px 5px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    &.next {
+      outline: lightgrey solid thin;
+      outline-offset: -1px;
+    }
+
+    &.finished {
+      background-color: lightgreen;
+
+      p::before {
+        content: "✅ "
+      }
+    }
+
+    &.locked {
+      background-color: lightgrey;
+      opacity: 30%;
+    }
+
+    &.terminal {
+      padding: 8px 1.3em;
+    }
+  }
+}

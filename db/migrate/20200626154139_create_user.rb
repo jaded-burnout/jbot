@@ -4,6 +4,7 @@ class CreateUser < ActiveRecord::Migration[5.2]
       t.string :email, null: false, unique: true
       t.string :password_digest
       t.boolean :admin, null: false, default: false
+      t.timestamps
     end
   end
 end

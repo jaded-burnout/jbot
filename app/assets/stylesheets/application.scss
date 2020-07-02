@@ -1,0 +1,16 @@
+/*
+ *= require_self
+ *= require_tree .
+ */
+body {
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+
+.main-content {
+  text-align: center;
+
+  > .centered {
+    display: inline-block;
+    text-align: left;
+  }
+}

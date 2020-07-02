@@ -4,8 +4,9 @@ class WebClient
   LOGGED_OUT_TRIGGER_TEXT = "CLICK HERE TO REGISTER YOUR ACCOUNT"
   BASE_URL = "https://forums.somethingawful.com"
 
-  def initialize(thread_id:)
+  def initialize(thread_id: nil, cookies_file_path: nil)
     @thread_id = thread_id
+    @cookies_file = Pathname.new(cookies_file_path)
 
     if File.exist?(cookies_file)
       @cookies = HTTP::CookieJar.new
@@ -13,7 +14,17 @@ class WebClient
     end
   end
 
+  def fetch_json_url(url:)
+    response = authenticated_request do |http|
+      http.get(url)
+    end
+
+    JSON.parse(response)
+  end
+
   def fetch_page(page_number: 1)
+    raise "Cannot fetch pages without a thread_id" unless thread_id
+
     url = thread_url(page_number: page_number)
 
     authenticated_request do |http|
@@ -22,6 +33,8 @@ class WebClient
   end
 
   def reply(text)
+    raise "Cannot reply without a thread_id" unless thread_id
+
     reply_form = authenticated_request do |http|
       http.get(BASE_URL + "/newreply.php?action=newreply&threadid=#{thread_id}")
     end
@@ -112,7 +125,7 @@ private
   end
 
   def cookies_file
-    $application.root + ".cookies"
+    @cookies_file || $application.root + ".cookies"
   end
 
   def expire_cookies

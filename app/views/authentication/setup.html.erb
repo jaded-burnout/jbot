@@ -1,0 +1,7 @@
+<% if setup_finished? %>
+  <h1>You're all set up!</h1>
+<% else %>
+  <h1>Set up your authentication</h1>
+<% end %>
+
+<%= render "stage", stage: @status %>

@@ -33,5 +33,16 @@ module Web
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    config.after_initialize do |app|
+      app.routes.default_url_options[:host] = ENV.fetch("APP_HOST")
+      app.reload_routes!
+
+      app.config.discord_oauth2_client = OAuth2::Client.new(ENV.fetch("DISCORD_CLIENT_ID"), ENV.fetch("DISCORD_CLIENT_SECRET"),
+        site: ENV.fetch("DISCORD_CLIENT_SITE"),
+        authorize_url: "/api/oauth2/authorize",
+        token_url: "/api/oauth2/token",
+      )
+    end
   end
 end
