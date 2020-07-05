@@ -27,6 +27,6 @@ class Forum < ApplicationRecord
     class_name: "SomethingAwfulUserCache"
 
   def to_s
-    discord_id
+    name
   end
 end

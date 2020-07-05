@@ -3,4 +3,6 @@
   and wait for JBot to verify you.
 </p>
 
-<pre><%= stage.token %></pre>
+<pre>
+  <%= stage.finished? ? "[redacted]" : stage.token %>
+</pre>

@@ -1,6 +1,6 @@
 class SetupStatus::SomethingAwful::VerifyModeratorStatus < SetupStatus::Base
   def finished?
-    user.forums_with_mod_status.any?
+    previous_stage.finished? && user.forums_with_mod_status.any?
   end
 
   def terminal?

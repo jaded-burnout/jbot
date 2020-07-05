@@ -53,6 +53,10 @@ namespace :mods_and_forums do
         if profile.include?(status.token)
           puts "-- #{user_name} verified!"
           user.update!(something_awful_verified: true)
+
+          if (assigned_forums = user.update_mod_forum_records)
+            puts "-- Assigning mod permissions to #{assigned_forums.pluck(:name).to_sentence}"
+          end
         elsif user.updated_at < 1.day.ago
           puts "-- #{user_name}'s request is stale, deleting"
           user.update!(something_awful_id: nil)

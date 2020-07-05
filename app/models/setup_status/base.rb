@@ -1,6 +1,7 @@
 class SetupStatus::Base
-  def initialize(user)
+  def initialize(user, previous_stage: nil)
     @user = user
+    @previous_stage = previous_stage
   end
 
   def finished?
@@ -8,7 +9,12 @@ class SetupStatus::Base
   end
 
   def sequence
-    ordered_sequence.map { |s| s.new(user) }
+    previous_stage = nil
+    ordered_sequence.map { |stage_class|
+      stage_class.new(user, previous_stage: previous_stage).tap do |stage|
+        previous_stage = stage
+      end
+    }
   end
 
   def terminal?
@@ -34,6 +40,7 @@ private
   end
 
   attr_reader *%I[
+    previous_stage
     user
   ].freeze
 end

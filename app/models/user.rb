@@ -23,7 +23,7 @@ class User < ApplicationRecord
   validates :something_awful_id, presence: true, if: :something_awful_verified?
   validates :something_awful_id, uniqueness: true
 
-  has_many :server_permissions, inverse_of: :server, dependent: :destroy
+  has_many :server_permissions, inverse_of: :user, dependent: :destroy
   has_many :servers, through: :server_permissions, inverse_of: :users
   has_many :servers_with_mod_status,
     -> { where("server_permissions.moderator" => true) },
@@ -31,7 +31,7 @@ class User < ApplicationRecord
     source: :server,
     inverse_of: :moderators
 
-  has_many :forum_permissions, inverse_of: :forum, dependent: :destroy
+  has_many :forum_permissions, inverse_of: :user, dependent: :destroy
   has_many :forums, through: :forum_permissions, inverse_of: :users
   has_many :forums_with_mod_status,
     -> { where("forum_permissions.moderator" => true) },
@@ -43,5 +43,20 @@ class User < ApplicationRecord
     return nil if something_awful_id.nil?
 
     SomethingAwfulUserCache.find_by(something_awful_id: something_awful_id)
+  end
+
+  def update_mod_forum_records
+    return unless something_awful_id && something_awful_verified
+    return unless (sa_identity = something_awful_claimed_identity)
+
+    permissions = sa_identity.forums.map do |forum|
+      ForumPermission.find_or_initialize_by(forum_id: forum.id).tap do |permission|
+        permission.moderator = true
+      end
+    end
+
+    update!(forum_permissions: permissions)
+
+    sa_identity.forums
   end
 end
