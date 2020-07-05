@@ -1,3 +1,10 @@
+PATH
+  remote: ../something_awful
+  specs:
+    something_awful (0.1.0.0)
+      http
+      oga
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -257,16 +264,15 @@ DEPENDENCIES
   discordrb
   factory_bot
   generic_form_builder
-  http
   jwt
   listen (>= 3.0.5, < 3.2)
   oauth2
-  oga
   pg (>= 0.18, < 2.0)
   puma (~> 3.11)
   rails (~> 5.2.2)
   rspec
   sass-rails (~> 5.0)
+  something_awful!
   spring
   spring-watcher-listen (~> 2.0.0)
   timecop

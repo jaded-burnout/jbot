@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby
-
-require_relative "../setup"
-require "contests/posts_within_24_hour_windows"
-Contests::PostsWithin24HourWindows.print_all

@@ -11,14 +11,13 @@ gem "bcrypt", "~> 3.1.7" # Use ActiveModel has_secure_password
 gem "bootsnap", ">= 1.1.0", require: false
 gem "discordrb"
 gem "generic_form_builder"
-gem "http"
 gem "jwt"
 gem "oauth2"
-gem "oga"
 gem "pg", ">= 0.18", "< 2.0" # Use postgresql as the database for Active Record
 gem "puma", "~> 3.11" # Use Puma as the app server
 gem "rails", "~> 5.2.2"
 gem "sass-rails", "~> 5.0" # Use SCSS for stylesheets
+gem "something_awful", path: "../something_awful"
 gem "uglifier", ">= 1.3.0" # Use Uglifier as compressor for JavaScript assets
 gem "warning"
 
