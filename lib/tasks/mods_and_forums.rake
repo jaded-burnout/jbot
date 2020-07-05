@@ -34,6 +34,29 @@ namespace :mods_and_forums do
 
   desc "Check profiles"
   task check_profiles: :environment do
+    User
+      .where(something_awful_verified: false)
+      .where.not(something_awful_id: nil)
+      .each do |user|
+        user.update!(something_awful_id: nil) unless user.something_awful_claimed_identity
 
+        user_name = user.something_awful_claimed_identity.name
+
+        puts "Verifying #{user_name}"
+
+        status = SetupStatus::SomethingAwful::GetVerified.new(user)
+
+        profile = SomethingAwful::Client.fetch_profile(Rails.root + ".cookies",
+          something_awful_id: user.something_awful_id,
+        )
+
+        if profile.include?(status.token)
+          puts "-- #{user_name} verified!"
+          user.update!(something_awful_verified: true)
+        elsif user.updated_at < 1.day.ago
+          puts "-- #{user_name}'s request is stale, deleting"
+          user.update!(something_awful_id: nil)
+        end
+      end
   end
 end
