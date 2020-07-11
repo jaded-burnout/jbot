@@ -31,6 +31,11 @@ class User < ApplicationRecord
     source: :server,
     inverse_of: :moderators
 
+  has_many :servers_without_mod_status,
+    -> { where("server_permissions.moderator" => false) },
+    through: :server_permissions,
+    source: :server
+
   has_many :forum_permissions, inverse_of: :user, dependent: :destroy
   has_many :forums, through: :forum_permissions, inverse_of: :users
   has_many :forums_with_mod_status,

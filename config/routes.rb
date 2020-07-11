@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   get "/authentication/discord/callback", to: "authentication#discord_callback"
   post "/authentication/discord/disconnect", to: "authentication#disconnect_discord"
 
-  resources :servers, except: [:edit, :update]
+  resources :servers, except: [:new, :show]
 
   root to: "servers#index"
 end

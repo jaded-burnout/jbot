@@ -1,11 +1,15 @@
 <h1>Servers</h1>
 
+<h2>Servers you're on and can add a bot to</h2>
 <ul>
-  <% current_user.servers.each do |server| %>
-    <li><%= link_to server %></li>
+  <% current_user.servers_with_mod_status.order(:name).each do |server| %>
+    <li><%= link_to server.name, edit_server_path(server) %></li>
   <% end %>
 </ul>
 
-<p>
-  <%= link_to "Add a new Discord server", new_server_path %>
-</p>
+<h2>Servers you're on and can't add a bot to</h2>
+<ul>
+  <% current_user.servers_without_mod_status.order(:name).each do |server| %>
+    <li><%= server %></li>
+  <% end %>
+</ul>
