@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_04_070431) do
+ActiveRecord::Schema.define(version: 2020_07_11_142937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,10 +56,9 @@ ActiveRecord::Schema.define(version: 2020_07_04_070431) do
 
   create_table "servers", force: :cascade do |t|
     t.string "discord_id", null: false
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_servers_on_user_id"
+    t.string "name"
   end
 
   create_table "something_awful_user_caches", force: :cascade do |t|
@@ -77,8 +76,9 @@ ActiveRecord::Schema.define(version: 2020_07_04_070431) do
     t.datetime "updated_at", null: false
     t.string "discord_id"
     t.string "something_awful_id"
-    t.boolean "discord_verified", default: false, null: false
     t.boolean "something_awful_verified", default: false, null: false
+    t.string "discord_access_token"
+    t.string "discord_refresh_token"
   end
 
 end

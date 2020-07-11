@@ -1,1 +1,11 @@
-<p>Here is some text about discord 1</p>
+<% if stage.finished? %>
+  <p>
+    Identified as Discord ID <%= current_user.discord_id %>
+  </p>
+
+  <%= button_to "Revoke access", authentication_discord_disconnect_path %>
+<% else %>
+  <p>
+    <%= link_to "Identify yourself with Discord", DiscordOauth2.authorise_url(user_id: current_user.id) %>
+  </p>
+<% end %>

@@ -3,10 +3,10 @@
 # Table name: servers
 #
 #  id         :bigint           not null, primary key
+#  name       :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  discord_id :string           not null
-#  user_id    :bigint           not null
 #
 class Server < ApplicationRecord
   validates :discord_id, presence: true, uniqueness: true
@@ -20,6 +20,6 @@ class Server < ApplicationRecord
     inverse_of: :servers_with_mod_status
 
   def to_s
-    discord_id
+    name || discord_id
   end
 end

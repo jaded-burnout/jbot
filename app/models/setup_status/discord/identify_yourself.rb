@@ -1,6 +1,6 @@
 class SetupStatus::Discord::IdentifyYourself < SetupStatus::Base
   def finished?
-    user.discord_verified?
+    user.discord_id.present?
   end
 
   def terminal?

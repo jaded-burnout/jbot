@@ -44,4 +44,21 @@ class AuthenticationController < ApplicationController
       flash.alert(current_user.errors.full_messages.to_sentence)
     end
   end
+
+  def discord_callback
+    token = DiscordOauth2.get_token(params[:code], user_id: current_user.id, hmac: params[:state])
+
+    current_user.discord_assign_token(token)
+    current_user.save!
+    current_user.update_discord_id
+    current_user.update_server_records
+
+    redirect_to setup_path
+  end
+
+  def disconnect_discord
+    current_user.revoke_discord
+
+    redirect_to setup_path
+  end
 end

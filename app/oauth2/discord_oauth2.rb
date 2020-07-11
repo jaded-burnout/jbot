@@ -1,4 +1,4 @@
-class Discord
+class DiscordOauth2
   SECONDS_BETWEEN_REQUESTS_LIMIT = 4
   INTEGRATION_NAME = "Discord".freeze
 
@@ -15,7 +15,12 @@ class Discord
       client_id: client_id,
       redirect_uri: redirect_uri,
       response_type: "code",
+
       state: generate_hmac(user_id),
+
+      # https://discord.com/developers/docs/topics/oauth2#authorization-code-grant
+      # The space here will be escaped properly by the library.
+      scope: ["identify", "guilds"].join(" "),
     )
   end
 
@@ -30,8 +35,8 @@ class Discord
     )
   end
 
-  def initialize(integration = nil)
-    @integration = integration
+  def initialize(user = nil)
+    @user = user
   end
 
   def get(path)
@@ -44,8 +49,13 @@ class Discord
     Rails.logger.info("#{integration_name} GET request to #{path}")
 
     response = oauth2_access_token.get(path, headers: { "Accept" => "application/json" })
+    parsed_response = response.parsed
 
-    response.parsed.deep_symbolize_keys
+    if parsed_response.is_a?(Array)
+      parsed_response.map { |r| r.deep_symbolize_keys }
+    else
+      parsed_response.deep_symbolize_keys
+    end
   rescue OAuth2::Error => e
     Rails.logger.warn(e.message)
 
@@ -71,14 +81,14 @@ private
       rate_limit
 
       @oauth2_access_token = @oauth2_access_token.refresh!
-      integration.update_token(oauth2_access_token)
+      user.discord_update_token(oauth2_access_token)
     end
   end
 
   def oauth2_access_token
     @oauth2_access_token ||= OAuth2::AccessToken.from_hash(oauth2_client,
-      access_token: integration.access_token,
-      refresh_token: integration.refresh_token,
+      access_token: user.discord_access_token,
+      refresh_token: user.discord_refresh_token,
     )
   end
 
@@ -104,7 +114,7 @@ private
   end
 
   def redirect_uri
-    Rails.application.routes.url_helpers.integrations_discord_callback_url
+    Rails.application.routes.url_helpers.authentication_discord_callback_url
   end
 
   def integration_name
@@ -120,9 +130,10 @@ private
   end
 
   def generate_hmac(user_id)
-    raise "Missing #{integration_name} HMAC secret" unless (key = ENV["DISCORD_HMAC_SECRET"]).present?
-
-    OpenSSL::HMAC.hexdigest("SHA256", key, user_id.to_s)
+    TokenGenerator.generate_token(
+      user_id: user_id,
+      action: "discord:identify"
+    )
   end
 
   def verify_hmac(hmac, user_id)
@@ -130,6 +141,6 @@ private
   end
 
   attr_reader *%I[
-    integration
+    user
   ].freeze
 end
